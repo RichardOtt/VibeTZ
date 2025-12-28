@@ -92,19 +92,23 @@ def index():
         for base_dt in base_datetimes:
             # display input time without timezone information
             base_display = base_dt.strftime('%Y-%m-%d %H:%M:%S')
+            # weekday as separate value (e.g., Monday)
+            weekday = base_dt.strftime('%A')
             row_cells = []
             for label, tzname in headers:
                 if not tzname:
-                    row_cells.append('Unrecognized location')
+                    row_cells.append((None, 'Unrecognized location'))
                     continue
                 try:
                     tz_obj = pytz.timezone(tzname)
                     converted = base_dt.astimezone(tz_obj)
-                    # show only date and time in the grid cells
-                    row_cells.append(converted.strftime('%Y-%m-%d %H:%M:%S'))
+                    # cell shows date/time and weekday separately
+                    dt_str = converted.strftime('%Y-%m-%d %H:%M:%S')
+                    wd_str = converted.strftime('%A')
+                    row_cells.append((dt_str, wd_str))
                 except Exception:
-                    row_cells.append('Unrecognized timezone')
-            rows_matrix.append((base_display, row_cells))
+                    row_cells.append((None, 'Unrecognized timezone'))
+            rows_matrix.append((base_display, weekday, row_cells))
 
         header_labels = [h[0] for h in headers]
         return render_template('results.html', headers=header_labels, rows=rows_matrix)

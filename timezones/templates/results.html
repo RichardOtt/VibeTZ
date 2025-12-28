@@ -16,17 +16,26 @@
           <thead>
             <tr>
               <th>Input time (base)</th>
+              <th>Weekday</th>
               {% for tz in headers %}
                 <th>{{ tz }}</th>
               {% endfor %}
             </tr>
           </thead>
           <tbody>
-            {% for base_display, cells in rows %}
+            {% for base_display, weekday, cells in rows %}
             <tr>
-              <td>{{ base_display }}</td>
-              {% for cell in cells %}
-                <td>{{ cell }}</td>
+              <td style="white-space:nowrap">{{ base_display }}</td>
+              <td style="white-space:nowrap">{{ weekday }}</td>
+              {% for dt, wd in cells %}
+                <td>
+                  {% if dt %}
+                    <div>{{ dt }}</div>
+                    <div class="text-muted small">{{ wd }}</div>
+                  {% else %}
+                    <div class="text-danger">{{ wd }}</div>
+                  {% endif %}
+                </td>
               {% endfor %}
             </tr>
             {% endfor %}
